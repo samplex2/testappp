@@ -26,22 +26,26 @@ public class loginform extends javax.swing.JFrame {
     }
     static String status;
     static String type;
-
+     static String accname;
+     
     public static boolean loginAcc(String username, String password){
         dbConnector connector = new dbConnector();
         try{
             String query = "SELECT * FROM tbl_user  WHERE u_username = '" + username + "' AND u_password = '" + password + "'";
             ResultSet resultSet = connector.getData(query);
             if(resultSet.next()){
-              status = resultSet.getString("u_status");
+             status = resultSet.getString("u_status");
              type = resultSet.getString("u_type");
-               return true;
+             accname= resultSet.getString ("u_fname");
+             
+                return true;
             }else{
                 return false;
             }
             
          
         }catch (SQLException ex) {
+            System.out.println(""+ex);
             return false;
         }
 
@@ -66,7 +70,8 @@ public class loginform extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Loginform");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-scholarship-64.png"))); // NOI18N
+        jLabel1.setText("LOGIN FORM");
 
         jLabel2.setText("Username");
 
@@ -141,34 +146,35 @@ public class loginform extends javax.swing.JFrame {
                     .addComponent(jButton2))
                 .addGap(26, 26, 26)
                 .addComponent(jLabel4)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-  if (loginAcc(username.getText(),password.getText())){
-      if(!status.equals("Active")){
-       JOptionPane.showMessageDialog(null, "Acount is not Active, Contact ME!!");
-      }else{
-        if(type.equals("Admin")){
-       admindashboard ads = new admindashboard();
-       JOptionPane.showMessageDialog(null, "Sucess!");
-       ads.setVisible(true);
-       this.dispose();
-     }else if(type.equals("User")){
-       JOptionPane.showMessageDialog(null, "Sucess!");
-       userDashboard usd = new userDashboard();
-       usd.setVisible(true);
-       this.dispose();
-     }else{
-        JOptionPane.showMessageDialog(null, "No account type, Contact ME!!");
-     }
-      }
-  }else{
-       JOptionPane.showMessageDialog(null, "Invalid !");
-   }
+    if (loginAcc(username.getText(),password.getText())){
+        if(!status.equals("Active")){
+         JOptionPane.showMessageDialog(null, "Acount is not Active, Contact ME!!");
+        }else{
+            if(type.equals("Admin")){
+                JOptionPane.showMessageDialog(null, "Sucess!");
+                admindashboard ads = new admindashboard();
+                ads.name.setText(""+accname);
+                ads.setVisible(true);
+                this.dispose();
+           }else if(type.equals("User")){
+                JOptionPane.showMessageDialog(null, "Sucess!");
+                userDashboard usd = new userDashboard();
+                usd.setVisible(true);
+                this.dispose();
+           }else{
+                JOptionPane.showMessageDialog(null, "No account type, Contact ME!!");
+           }
+        }
+    }else{
+        JOptionPane.showMessageDialog(null, "Invalid !");
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
