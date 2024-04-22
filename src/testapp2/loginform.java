@@ -7,6 +7,7 @@ package testapp2;
 
 import admin.admindashboard;
 import config.dbConnector;
+import config.session;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ public class loginform extends javax.swing.JFrame {
      
     public static boolean loginAcc(String username, String password){
         dbConnector connector = new dbConnector();
+        
         try{
             String query = "SELECT * FROM tbl_user  WHERE u_username = '" + username + "' AND u_password = '" + password + "'";
             ResultSet resultSet = connector.getData(query);
@@ -37,7 +39,16 @@ public class loginform extends javax.swing.JFrame {
              status = resultSet.getString("u_status");
              type = resultSet.getString("u_type");
              accname= resultSet.getString ("u_fname");
-             
+           session sess= session.getInstance();
+             sess.setUid(resultSet.getInt("u_id"));
+             sess.setFname(resultSet.getString("u_fname"));
+             sess.setLname(resultSet.getString("u_lname"));
+             sess.setEmail(resultSet.getString("u_email"));
+             sess.setUsername(resultSet.getString("u_username"));
+             sess.setType(resultSet.getString("u_type"));
+             sess.setStatus(resultSet.getString("u_status"));
+              
+                    
                 return true;
             }else{
                 return false;
@@ -70,7 +81,8 @@ public class loginform extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-scholarship-64.png"))); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-school-96.png"))); // NOI18N
         jLabel1.setText("LOGIN FORM");
 
         jLabel2.setText("Username");
@@ -125,7 +137,7 @@ public class loginform extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76))
+                .addGap(74, 74, 74))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,12 +156,13 @@ public class loginform extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -160,7 +173,7 @@ public class loginform extends javax.swing.JFrame {
             if(type.equals("Admin")){
                 JOptionPane.showMessageDialog(null, "Sucess!");
                 admindashboard ads = new admindashboard();
-                ads.name.setText(""+accname);
+                ads.adminname.setText(""+accname);
                 ads.setVisible(true);
                 this.dispose();
            }else if(type.equals("User")){

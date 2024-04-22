@@ -6,6 +6,8 @@
 package admin;
 
 import config.dbConnector;
+import config.session;
+import java.awt.Color;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,11 +27,14 @@ public class userform extends javax.swing.JFrame {
     public userform() {
         initComponents();
         displayData();
+        
     }
+     Color navcolor = new Color(255,255,204);
+     Color hovercolor = new Color (255,204,255);
     public void displayData(){
         try{
             dbConnector dbc = new dbConnector();
-            ResultSet rs = dbc.getData("SELECT * FROM tbl_user");
+            ResultSet rs = dbc.getData("SELECT u_id,u_fname,u_lname,u_email,u_status FROM tbl_user");
           usertable.setModel(DbUtils.resultSetToTableModel(rs));
              rs.close();
         }catch(SQLException ex){
@@ -55,26 +60,13 @@ public class userform extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        fn = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        currentuser = new javax.swing.JLabel();
+        userid = new javax.swing.JLabel();
+        p_add = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        idd = new javax.swing.JTextField();
-        ln = new javax.swing.JTextField();
-        em = new javax.swing.JTextField();
-        un = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        ps = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        Add = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        us = new javax.swing.JComboBox<>();
-        ut = new javax.swing.JComboBox<>();
+        p_edit = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         userstable = new javax.swing.JScrollPane();
         usertable = new javax.swing.JTable();
@@ -83,6 +75,14 @@ public class userform extends javax.swing.JFrame {
         jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 204));
         jPanel1.setLayout(null);
@@ -93,79 +93,67 @@ public class userform extends javax.swing.JFrame {
         jLabel1.setBounds(10, 20, 190, 40);
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-admin-100.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-student-100.png"))); // NOI18N
         jPanel1.add(jLabel7);
         jLabel7.setBounds(690, 10, 120, 100);
-        jPanel1.add(fn);
-        fn.setBounds(20, 130, 100, 20);
 
-        jLabel4.setText("First name:");
-        jPanel1.add(jLabel4);
-        jLabel4.setBounds(20, 110, 70, 20);
+        currentuser.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        currentuser.setText("Current User");
+        jPanel1.add(currentuser);
+        currentuser.setBounds(700, 120, 90, 17);
 
-        jLabel5.setText("User Status:");
-        jPanel1.add(jLabel5);
-        jLabel5.setBounds(370, 110, 70, 20);
+        userid.setText("User ID");
+        jPanel1.add(userid);
+        userid.setBounds(700, 140, 36, 14);
 
-        jLabel6.setText("User ID");
-        jPanel1.add(jLabel6);
-        jLabel6.setBounds(20, 70, 70, 20);
+        p_add.setBackground(new java.awt.Color(255, 255, 204));
+        p_add.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                p_addMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                p_addMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                p_addMouseExited(evt);
+            }
+        });
+        p_add.setLayout(null);
 
-        jLabel8.setText("Last Name:");
-        jPanel1.add(jLabel8);
-        jLabel8.setBounds(130, 70, 70, 20);
+        jLabel5.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel5.setText("ADD");
+        p_add.add(jLabel5);
+        jLabel5.setBounds(50, 10, 30, 17);
 
-        jLabel9.setText("Email:");
-        jPanel1.add(jLabel9);
-        jLabel9.setBounds(130, 110, 70, 20);
+        jLabel6.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel6.setText("ADD");
+        p_add.add(jLabel6);
+        jLabel6.setBounds(50, 10, 30, 17);
 
-        jLabel10.setText("Username:");
-        jPanel1.add(jLabel10);
-        jLabel10.setBounds(240, 70, 70, 20);
+        jPanel1.add(p_add);
+        p_add.setBounds(10, 60, 170, 40);
 
-        idd.setEnabled(false);
-        jPanel1.add(idd);
-        idd.setBounds(20, 90, 100, 20);
-        jPanel1.add(ln);
-        ln.setBounds(130, 90, 100, 20);
-        jPanel1.add(em);
-        em.setBounds(130, 130, 100, 20);
-        jPanel1.add(un);
-        un.setBounds(240, 90, 100, 20);
+        p_edit.setBackground(new java.awt.Color(255, 255, 204));
+        p_edit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                p_editMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                p_editMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                p_editMouseExited(evt);
+            }
+        });
+        p_edit.setLayout(null);
 
-        jLabel11.setText("Password:");
-        jPanel1.add(jLabel11);
-        jLabel11.setBounds(240, 110, 70, 20);
-        jPanel1.add(ps);
-        ps.setBounds(240, 130, 100, 20);
+        jLabel3.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel3.setText("EDIT");
+        p_edit.add(jLabel3);
+        jLabel3.setBounds(50, 10, 31, 17);
 
-        jLabel14.setText("Usertype:");
-        jPanel1.add(jLabel14);
-        jLabel14.setBounds(370, 70, 70, 20);
-
-        jButton1.setText("Refresh");
-        jPanel1.add(jButton1);
-        jButton1.setBounds(420, 0, 71, 23);
-
-        Add.setText("Add");
-        jPanel1.add(Add);
-        Add.setBounds(200, 30, 73, 23);
-
-        jButton3.setText("Edit");
-        jPanel1.add(jButton3);
-        jButton3.setBounds(280, 0, 51, 23);
-
-        jButton4.setText("Update");
-        jPanel1.add(jButton4);
-        jButton4.setBounds(350, 30, 67, 23);
-
-        us.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Pending", " " }));
-        jPanel1.add(us);
-        us.setBounds(370, 130, 90, 20);
-
-        ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "User", "Admin" }));
-        jPanel1.add(ut);
-        ut.setBounds(370, 90, 90, 20);
+        jPanel1.add(p_edit);
+        p_edit.setBounds(10, 120, 170, 40);
 
         jPanel2.setBackground(new java.awt.Color(255, 204, 255));
 
@@ -243,6 +231,7 @@ public class userform extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
@@ -256,34 +245,77 @@ public class userform extends javax.swing.JFrame {
     }//GEN-LAST:event_userstableMouseClicked
 
     private void usertableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usertableMouseClicked
-         int rowIndex = usertable.getSelectedRow();
-    if(rowIndex <0){
-        JOptionPane.showMessageDialog(null, "Please select Data!");
-    }else{
-        TableModel model = usertable.getModel();
-     String id = model.getValueAt(rowIndex,0).toString();
-        dbConnector dbc = new dbConnector();
-        
-        try{
-           ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_id = '"+ id +"'");
-           if(rs.next()){
-               idd.setText(""+rs.getString("u_id"));
-               fn.setText(""+rs.getString("u_fname"));
-                ln.setText(""+rs.getString("u_lname"));
-                 em.setText(""+rs.getString("u_email"));
-                  un.setText(""+rs.getString("u_username"));
-                   ps.setText(""+rs.getString("u_password"));
-                    ut.setSelectedItem(""+rs.getString("u_type"));
-                     us.setSelectedItem(""+rs.getString("u_status"));
-                      Add.setEnabled(false);
-                  
-           }
-        } catch (SQLException ex){
-            System.out.println("" + ex);
-        }
-        
-    }
+     
     }//GEN-LAST:event_usertableMouseClicked
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+       session sess = session.getInstance();
+       userid.setText(""+sess.getUid());
+        
+    }//GEN-LAST:event_formWindowActivated
+
+    private void p_addMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_addMouseEntered
+       
+     p_add.setBackground(hovercolor);
+    }//GEN-LAST:event_p_addMouseEntered
+
+    private void p_addMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_addMouseExited
+       
+     p_add.setBackground(navcolor);
+    }//GEN-LAST:event_p_addMouseExited
+
+    private void p_editMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_editMouseEntered
+       p_edit.setBackground(hovercolor);
+    }//GEN-LAST:event_p_editMouseEntered
+
+    private void p_editMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_editMouseExited
+        p_edit.setBackground(navcolor);
+    }//GEN-LAST:event_p_editMouseExited
+
+    private void p_addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_addMouseClicked
+       createuserform cuf = new createuserform();
+       cuf.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_p_addMouseClicked
+
+    private void p_editMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_p_editMouseClicked
+        int rowIndex = usertable.getSelectedRow();
+       
+       if(rowIndex<0){
+           JOptionPane.showMessageDialog(null,"Please Select some Item");
+       }else{
+           
+            
+           try{
+               dbConnector dbc = new dbConnector();
+               TableModel tbl = usertable.getModel();
+               ResultSet rs = dbc.getData("SELECT * FROM tbl_user WHERE u_id = '"+tbl.getValueAt(rowIndex,0)+"'");
+            if(rs.next()){
+                createuserform cuf = new createuserform();
+                cuf.uid.setText("'"+rs.getInt("u_id"));
+                cuf.fname.setText("'"+rs.getString("u_fname"));
+                cuf.lname.setText("'"+rs.getString("u_lname"));
+                cuf.email.setText("'"+rs.getString("u_email"));
+                cuf.username.setText("'"+rs.getString("u_username"));
+                cuf.password.setText("'"+rs.getString("u_password"));
+                cuf.usertype.setSelectedItem("'"+rs.getString("u_type"));
+                cuf.us.setSelectedItem("'"+rs.getString("u_status"));
+                cuf.ADD.setEnabled(false); 
+                cuf.UPDATE.setEnabled(true);
+                cuf.setVisible(true);
+                this.dispose();
+                
+            }
+           }catch(SQLException ex){
+               System.out.println(""+ex);
+           }
+       } 
+      
+    }//GEN-LAST:event_p_editMouseClicked
 
     /**
      * @param args the command line arguments
@@ -322,33 +354,20 @@ public class userform extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Add;
-    private javax.swing.JTextField em;
-    private javax.swing.JTextField fn;
-    private javax.swing.JTextField idd;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel currentuser;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField ln;
-    private javax.swing.JTextField ps;
-    private javax.swing.JTextField un;
-    private javax.swing.JComboBox<String> us;
+    private javax.swing.JPanel p_add;
+    private javax.swing.JPanel p_edit;
+    private javax.swing.JLabel userid;
     private javax.swing.JScrollPane userstable;
     private javax.swing.JTable usertable;
-    private javax.swing.JComboBox<String> ut;
     // End of variables declaration//GEN-END:variables
 }
